@@ -8,3 +8,4 @@
 *.pyc filter=lfs diff=lfs merge=lfs -text
 *.PNG filter=lfs diff=lfs merge=lfs -text
 *.js filter=lfs diff=lfs merge=lfs -text
+*.labels filter=lfs diff=lfs merge=lfs -text
