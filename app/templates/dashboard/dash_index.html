@@ -1,0 +1,56 @@
+{% extends 'extends/dash_layout.html'%}
+
+{% block body %}
+
+    <!--h1>Project ID: {{id}}, {{title}}<h1-->
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">"{{title|e}}"</h1>
+        <p class="lead">This is your dashboard where you can oversee your project</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        Upload Images
+        <a href="/upload" class="btn btn-primary float-right">Go!</a>
+      </div>
+      <div class="card-body">
+        Do some previewy stuff here
+
+      </div>
+    </div>
+    <br>
+    <div class="card">
+      <div class="card-header">
+        Label Images
+        <a href="/label" class="btn btn-primary float-right">Go!</a>
+      </div>
+      <div class="card-body">
+        Do some previewy stuff here
+
+      </div>
+    </div>
+    <br>
+    <div class="card">
+      <div class="card-header">
+        Train Network
+        <a href="/training" class="btn btn-primary float-right">Go!</a>
+      </div>
+      <div class="card-body">
+        Do some previewy stuff here
+
+      </div>
+    </div>
+    <br>
+    <div class="card">
+      <div class="card-header">
+        Predict
+        <a href="/prediction" class="btn btn-primary float-right">Go!</a>
+      </div>
+      <div class="card-body">
+        Do some previewy stuff here
+
+      </div>
+    </div>
+{% endblock %}

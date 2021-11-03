@@ -1,0 +1,55 @@
+{% extends '/extends/upload_layout.html' %}
+
+
+{% block body %}
+<br>
+<form action="/submit_file" enctype=multipart/form-data method="post">
+<div class="input-group mb-3">
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" name="uploaded-file" id="file_upload" multiple="">
+        <label class="custom-file-label" for="file_upload">Browse</label>
+    </div>
+    <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="submit">Upload</button>
+    </div>
+</div>
+</form>
+<hr>
+
+<div class="accordion" id="imagePreview">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          Unlabelled Images
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#imagePreview">
+      <div class="card-body">
+        {% for filename in unlabelled %}
+        <img width="19%" src="{{upload_dir}}/unlabelled/{{filename}}" alt="{{filename}}" onclick="reset_canvas('{{upload_dir}}/unlabelled/{{filename}}');"/>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Labelled Images
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#imagePreview">
+      <div class="card-body">
+        {% for filename in labelled %}
+        <img width="19%" src="{{upload_dir}}/labelled/{{filename}}" alt="{{filename}}" onclick="reset_canvas(\\"{{upload_dir}}/labelled/{{filename}}\\");"/>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

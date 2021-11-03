@@ -1,0 +1,21 @@
+{% extends 'default_layout.html' %}
+
+{% block body %}
+<h1>Images:</h1>
+{% if filenames %}
+<ul>
+    {% for filename in filenames %}
+        <li>{{filename}}</li>
+        <form action="/delete_image/{{filename}}">
+            <input type="submit" value="Delete"/>
+        </form>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No Images to list</p>
+{% endif %}
+<hr>
+<form action="/">
+    <input type="submit" value="Back"/>
+</form>
+{% endblock %}

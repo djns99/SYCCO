@@ -1,0 +1,44 @@
+{% extends '/extends/default_layout.html' %}
+
+
+{% block body %}
+<br>
+<form action="/submit_prediction" enctype=multipart/form-data method="post">
+<div class="input-group mb-3">
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" name="uploaded-file" id="file_upload" multiple="">
+        <label class="custom-file-label" for="file_upload">Browse</label>
+    </div>
+    <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="submit">Upload</button>
+    </div>
+</div>
+</form>
+
+<div class="card">
+    <div class="card-header" id="predictionHeader">
+
+
+        <div class="row justify-content-between">
+            <div class="col-4 col-md-auto">
+                <h5>
+                    Prediction results
+                </h5>
+            </div>
+            <div class="col-4 col-md-auto">
+                <div class="btn-group">
+                        <button class="btn btn-outline-primary">Download Images</button>
+                        <button class="btn btn-outline-primary">Download Model</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        {% for filename in predictions %}
+        <img width="49%" src="{{upload_dir}}/predictions/{{filename}}" alt="{{filename}}" onclick="reset_canvas('{{upload_dir}}/predictions/{{filename}}');"/>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

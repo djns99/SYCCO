@@ -1,0 +1,62 @@
+
+<nav class="navbar navbar-expand-xl navbar-dark bg-dark" role="navigation">
+  <a class="navbar-brand" href="/">SYCCO</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="mainNavbar">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <!--All of our navbar links. -->
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="/create_new">Create New</a>
+      </li>
+      {% if session['project'] %}
+      <li class="nav-item">
+        <a class="nav-link" href="/upload">Upload Images</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="/label">Label Images</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="/training">Training</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="/prediction">Prediction</a>
+      </li>
+      {% endif %}
+    </ul>
+
+
+    <form class="form-inline my-2 my-lg-0" action = '/dashboard' enctype="multipart/form-data" method = 'POST'>
+      <input class="form-control mr-sm-2" type="text" name = 'projectSearch' placeholder="Enter ID..." aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    {% if session['project'] %}
+    <form class="form-inline my-2 my-lg-0" action='/dashboard' method='GET'>
+        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Dashboard</button>
+    </form>
+    {% endif %}
+  </div>
+</nav>
+
+
+
+<!--Drop down navbar item -->
+    <!--li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="/" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+      <div class="dropdown-menu" aria-labelledby="dropdown01">
+        <a class="dropdown-item" href="/upload">Upload Images</a>
+        <a class="dropdown-item" href="/label">Label Images</a>
+        <a class="dropdown-item" href="/training">Training</a>
+        <a class="dropdown-item" href="/prediction">Prediction</a>
+      </div>
+  </li-->
+
+<!--Disabled navbar item -->
+    <!--li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+    </li-->

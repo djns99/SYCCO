@@ -1,0 +1,177 @@
+{% extends '/extends/default_layout.html' %}
+
+{% block body %}
+<br>
+{% if lock_acquired and training_running %}
+{% if session['invalidated'] %}
+<div class="alert alert-warning"><form action="/stop_training" enctype=multipart/form-data method="post">You have added new data. Do you wish to restart the training process?<button class="btn btn-light float-right" type="submit">Stop</button></form></div>
+{% endif %}
+<div class="alert alert-info">Please refresh the page to see latest training progress</div>
+<div class="card">
+    <h5 class="card-header">
+        <form action="/stop_training" enctype=multipart/form-data method="post">
+            Training Progress
+            <div class="float-right" role="group" aria-label="trainingOptions">
+                {% if checkpoints %}
+                <a class="btn btn-outline-primary active" role="button" data-toggle="modal" data-target="#exampleModal">Export</a>
+                {% endif %}
+                <button class="btn btn-danger" type="submit">Stop</button>
+            </div>
+        </form>
+    </h5>
+  <div class="card-body">
+
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+            <h5>Loss</h5>
+            <canvas class="my-4 chartjs-render-monitor" id="lossCanvas" style="border:2px solid #f2f2f2;"></canvas>
+        </div>
+        <div class="carousel-item">
+            <h5>Accuracy</h5>
+            <canvas class="my-4 chartjs-render-monitor" id="accuracyCanvas" style="border:2px solid #f2f2f2;"></canvas>
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="static/scripts/training-graph.js"></script>
+    <script>
+        var ctxLoss = document.getElementById("lossCanvas");
+        resize_canvas(ctxLoss);
+        update_graph({{run_ids}}, {{loss}}, ctxLoss);
+        var ctxAccuracy = document.getElementById("accuracyCanvas");
+        update_graph({{run_ids}}, {{accuracy}}, ctxAccuracy);
+    </script>
+  </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="display-4">Training</h5>
+    </div>
+    <div class="card-body">
+
+    {% if training_running %}
+    <div class="alert alert-danger">Another process is currently training. Please wait until this project is complete.</div>
+    {% else %}
+
+    {% if not labelling_complete %}
+        <div class="alert alert-warning">You have not finished labelling all uploaded images. Are you sure you wish to continue?</div>
+    {% endif %}
+
+    <br>
+    <form action="/start_training" enctype=multipart/form-data method="post"><button class="btn btn-secondary btn-lg btn-block" type="submit">Start New Training Session</button></form>
+
+    <br>
+    {% if checkpoints %}
+    <form action="/start_training" enctype=multipart/form-data method="post">
+    {% endif %}
+        <button class="btn btn-secondary btn-lg btn-block {% if not checkpoints %} disabled {% endif %}" type="submit">Continue Training Session</button>
+    {% if checkpoints %}
+    </form>
+    {% endif %}
+    {% endif %}
+    </div>
+</div>
+
+<br>
+<hr>
+<br>
+
+{% if checkpoints %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="display-4">Existing Checkpoints</h5>
+    </div>
+    <div class="card-body">
+    <p>These are checkpoints from previous training sessions. Click 'Export' to create a model to use for predictions.</p>
+    <br>
+    <a class="btn btn-outline-primary btn-large btn-block active" role="button" data-toggle="modal" data-target="#exampleModal">Export</a>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+
+{% if checkpoints %}
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+          <div class="alert alert-warning">This will remove other exported models for this project.</div>
+          Please select which run you wish to export:
+          <div class="dropdown">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select checkpoint
+              </a>
+              <script>
+                  let file=undefined;
+                  let last=undefined;
+                  function update_selection(caller, new_file)
+                  {
+                    if(last != undefined)
+                    {
+                        last.classList.remove("active")
+                    }
+                    caller.classList.add("active")
+                    last = caller;
+                    file = new_file;
+                  }
+
+                  function export_checkpoint()
+                  {
+                    if(file == undefined)
+                    {
+                        return;
+                    }
+
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if(this.readyState == 4)
+                        {
+                            if(this.status < 200 || this.status >= 300)
+                            {
+                                alert("An error occured. Failed to export model")
+                                return
+                            }
+                        }
+                    };
+                    xhttp.open("POST", "/export_model", true)
+                    xhttp.setRequestHeader("Content-type", "text/plain")
+                    xhttp.send(file)
+
+
+                    document.getElementById("closeExport").click()
+                  }
+              </script>
+
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                {% for file, run in checkpoints %}
+                    <a class="dropdown-item" onclick="update_selection(this, '{{file}}')">{{run}}</a>
+                {% endfor %}
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="export_checkpoint();">Export</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeExport">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

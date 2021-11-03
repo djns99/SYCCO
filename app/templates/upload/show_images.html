@@ -1,0 +1,17 @@
+{% extends '/extends/upload_layout.html' %}
+
+{% block body %}
+<h1>Images:</h1>
+{% if filenames %}
+{% for filename in filenames %}
+<h2>{{filename}}</h2>
+<img width="50%" src="{{upload_dir}}/{{filename}}" alt="{{filename}}"/><br>
+{% endfor %}
+{% else %}
+<p>No Images to show</p>
+{% endif %}
+<hr>
+<form action="/index">
+    <input type="submit" value="Back"/>
+</form>
+{% endblock %}

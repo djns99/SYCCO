@@ -1,0 +1,27 @@
+{% extends '/extends/upload_layout.html' %}
+
+{% block body %}
+<br>
+<div class="card">
+  <h5 class="card-header">Create New Project:</h5>
+  <div class="card-body">
+      <form action="/create_new" enctype=multipart/form-data method = "post">
+          <div class="input-group mb-3">
+              <input type="text" name = "projectName"class="form-control" placeholder="Enter New Project Name..." aria-label="Enter New Project Name..." aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit">Create</button>
+              </div>
+          </div>
+      </form>
+  </div>
+</div>
+
+
+
+
+    <!--<br>-->
+    <!--<form action ="/create_new" enctype=multipart/form-data method = "get">-->
+        <!--<input type = "submit" value = "Show Folders">-->
+    <!--</form>-->
+
+{% endblock %}

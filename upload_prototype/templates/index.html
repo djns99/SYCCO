@@ -1,0 +1,15 @@
+{% extends 'default_layout.html' %}
+
+{% block body %}
+<form action="/submit_file" enctype=multipart/form-data method="post">
+    <input type="file" name="uploaded-file" multiple=""><br>
+    <input type="submit" value="Upload">
+</form>
+<hr>
+<form action="/list_images">
+    <input type="submit" value="List Images"/>
+</form>
+<form action="/show_images">
+    <input type="submit" value="See Images"/>
+</form>
+{% endblock %}
